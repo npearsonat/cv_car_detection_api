@@ -110,7 +110,7 @@ gcloud run deploy car-detection-api \
 4. Upload an image
 5. Send request
 
-![Postman Demo](screenshots/postman_screenshot.jpg)
+![Postman Demo](screenshots/postman_screenshot.png)
 
 ## Tech Stack
 
