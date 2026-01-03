@@ -10,47 +10,25 @@ The performance metric IoU stands for intersection over union and measures how m
 
 ## API Endpoints
 
-### `GET /`
-Health check endpoint
-```json
-{
-  "message": "Car Detection API",
-  "status": "running"
-}
-```
+**`GET /`** - Health check endpoint
 
-### `POST /predict`
-Returns JSON with detected cars, bounding boxes, and confidence scores
+**`POST /predict`** - Returns JSON with car count, bounding boxes, and confidence scores
+
+**`POST /predict/visualize`** - Returns base64-encoded image with bounding boxes drawn
+
+Example response from `/predict`:
 ```json
 {
   "num_cars": 2,
   "detections": [
     {
-      "bbox": {
-        "xmin": 100.5,
-        "ymin": 200.3,
-        "xmax": 300.2,
-        "ymax": 400.8
-      },
+      "bbox": {"xmin": 100.5, "ymin": 200.3, "xmax": 300.2, "ymax": 400.8},
       "confidence": 0.95
     }
   ],
-  "image_size": {
-    "width": 640,
-    "height": 480
-  }
+  "image_size": {"width": 640, "height": 480}
 }
 ```
-
-### `POST /predict/visualize`
-Returns base64-encoded image with bounding boxes drawn
-```json
-{
-  "num_cars": 2,
-  "image": "base64_encoded_image_string"
-}
-```
-
 ## Web Interface
 
 The web interface provides a user-friendly way to test the model. Users can upload PNG or JPG images through a simple drag-and-drop interface. The HTML file connects directly to the deployed API on Google Cloud Run and returns an annotated image with bounding boxes drawn around detected vehicles.
