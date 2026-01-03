@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Detection</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 900px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .upload-section {
+            border: 2px dashed #ccc;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 20px;
+            cursor: pointer;
+            background: #fafafa;
+        }
+
+        .upload-section:hover {
+            border-color: #999;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        button:hover:not(:disabled) {
+            background-color: #0056b3;
+        }
+
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .loading {
+            text-align: center;
+            color: #666;
+            margin: 20px 0;
+            display: none;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #007bff;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .results {
+            display: none;
+            margin-top: 30px;
+        }
+
+        .result-summary {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+
+        .car-count {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .result-image {
+            width: 100%;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+
+        .detections {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 4px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .detection-item {
+            background: white;
+            border-left: 3px solid #007bff;
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 3px;
+        }
+
+        .detection-title {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .detection-details {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .error {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+            padding: 12px;
+            border-radius: 4px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .preview-container {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .preview-image {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Car Detection</h1>
+        <p class="subtitle">Upload an image to detect vehicles</p>
+
+        <div class="upload-section" id="uploadArea">
+            <p>Click to select an image or drag and drop</p>
+            <p style="font-size: 14px; color: #999;">Supported formats: JPG, PNG</p>
+            <input type="file" id="fileInput" accept="image/*">
+        </div>
+
+        <div class="preview-container" id="previewContainer" style="display: none;">
+            <img id="previewImage" class="preview-image" alt="Preview">
+        </div>
+
+        <button id="detectBtn" disabled>Run Detection</button>
+
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Processing image...</p>
+        </div>
+
+        <div class="error" id="error"></div>
+
+        <div class="results" id="results">
+            <div class="result-summary">
+                <div class="car-count" id="carCount">0 cars detected</div>
+            </div>
+
+            <img id="resultImage" class="result-image" alt="Detection result">
+
+            <div class="detections" id="detections"></div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'https://car-detection-api-251509948200.us-central1.run.app';
+        
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const detectBtn = document.getElementById('detectBtn');
+        const loading = document.getElementById('loading');
+        const results = document.getElementById('results');
+        const error = document.getElementById('error');
+        const previewContainer = document.getElementById('previewContainer');
+        const previewImage = document.getElementById('previewImage');
+        
+        let selectedFile = null;
+
+        uploadArea.addEventListener('click', () => fileInput.click());
+
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                handleFile(file);
+            }
+        });
+
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.style.borderColor = '#999';
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.style.borderColor = '#ccc';
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.style.borderColor = '#ccc';
+            const file = e.dataTransfer.files[0];
+            if (file && file.type.startsWith('image/')) {
+                handleFile(file);
+            }
+        });
+
+        function handleFile(file) {
+            selectedFile = file;
+            detectBtn.disabled = false;
+            
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                previewImage.src = e.target.result;
+                previewContainer.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        }
+
+        detectBtn.addEventListener('click', async () => {
+            if (!selectedFile) return;
+
+            results.style.display = 'none';
+            error.style.display = 'none';
+            loading.style.display = 'block';
+            detectBtn.disabled = true;
+
+            try {
+                const formData = new FormData();
+                formData.append('file', selectedFile);
+
+                const response = await fetch(`${API_URL}/predict/visualize`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Error: ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                document.getElementById('carCount').textContent = 
+                    `${data.num_cars} car${data.num_cars !== 1 ? 's' : ''} detected`;
+                document.getElementById('resultImage').src = `data:image/jpeg;base64,${data.image}`;
+                
+                const detailResponse = await fetch(`${API_URL}/predict`, {
+                    method: 'POST',
+                    body: formData
+                });
+                const detailData = await detailResponse.json();
+
+                const detectionsDiv = document.getElementById('detections');
+                detectionsDiv.innerHTML = '';
+                
+                detailData.detections.forEach((detection, i) => {
+                    const item = document.createElement('div');
+                    item.className = 'detection-item';
+                    item.innerHTML = `
+                        <div class="detection-title">Detection ${i + 1}</div>
+                        <div class="detection-details">
+                            Confidence: ${(detection.confidence * 100).toFixed(1)}%<br>
+                            Position: (${Math.round(detection.bbox.xmin)}, ${Math.round(detection.bbox.ymin)}) to 
+                            (${Math.round(detection.bbox.xmax)}, ${Math.round(detection.bbox.ymax)})
+                        </div>
+                    `;
+                    detectionsDiv.appendChild(item);
+                });
+
+                results.style.display = 'block';
+                loading.style.display = 'none';
+
+            } catch (err) {
+                error.textContent = `Detection failed: ${err.message}`;
+                error.style.display = 'block';
+                loading.style.display = 'none';
+                detectBtn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>
