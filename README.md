@@ -71,7 +71,7 @@ The web interface provides a user-friendly way to test the model:
 - Annotated images with bounding boxes
 - Detailed detection list with coordinates and confidence scores
 
-![Web Interface Demo](screenshots/web_interface.png)
+![Web Interface Demo](screenshots/web_interface_screenshot.png)
 
 ## Installation & Local Setup
 ```bash
@@ -110,7 +110,7 @@ gcloud run deploy car-detection-api \
 4. Upload an image
 5. Send request
 
-![Postman Demo](screenshots/postman_test.png)
+![Postman Demo](screenshots/postman_screenshot.jpg)
 
 ## Tech Stack
 
@@ -133,12 +133,12 @@ gcloud run deploy car-detection-api \
 ## Project Structure
 ```
 car-detection-api/
-├── Dockerfile              # Docker configuration
-├── requirements.txt        # Python dependencies
-├── main.py                # FastAPI application
-├── index.html             # Web interface
-├── screenshots/           # Demo images
-└── README.md             # Documentation
+├── Dockerfile
+├── requirements.txt
+├── main.py
+├── index.html
+├── screenshots/
+└── README.md
 ```
 
 ## Model Training
@@ -151,20 +151,7 @@ The model was trained using transfer learning:
 
 Training notebook available upon request.
 
-## Future Improvements
-
-- Add vehicle type classification (sedan, SUV, truck)
-- Implement vehicle tracking across video frames
-- Add batch processing for multiple images
-- Deploy frontend to static hosting (GitHub Pages)
-- Add caching layer for faster repeated requests
-
 ## License
 
 MIT License - see LICENSE file for details
 
-## Acknowledgments
-
-- COCO dataset for pre-trained weights
-- Detectron2 framework by Facebook AI Research
-- Google Cloud Run for serverless deployment
