@@ -2,7 +2,7 @@
 
 A custom-trained object detection system that identifies vehicles in street scene images. Built with Faster R-CNN and deployed as a REST API on Google Cloud Run with a web interface for real-time inference.
 
-![Detection Demo](screenshots/detection_result.png)
+![Detection Demo](screenshots/detection_result.jpg)
 
 ## Features
 
