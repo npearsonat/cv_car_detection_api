@@ -69,20 +69,10 @@ Postman provides an alternative method for testing the API programmatically. Use
 
 ![Postman Demo](screenshots/postman_screenshot.png)
 
-**Model Training:**
-- PyTorch and Detectron2 (Faster R-CNN with ResNet-50 FPN backbone)
-- OpenCV for image processing
-- Trained in Google Colab
+## Technologies Used
 
-**Backend:**
-- FastAPI web framework
-- Uvicorn server
-- Containerized with Docker
-- Deployed on Google Cloud Run
-
-**Frontend:**
-- HTML/CSS/JavaScript
-- Fetch API for HTTP requests
+The model was built using PyTorch and Detectron2, implementing Faster R-CNN with a ResNet-50 FPN backbone. OpenCV handled image processing tasks, and training was conducted in Google Colab. 
+The backend uses FastAPI as the web framework with Uvicorn as the server, containerized with Docker and deployed on Google Cloud Run. The frontend is a simple HTML/CSS/JavaScript interface that uses the Fetch API to send HTTP requests to the deployed model.
 
 ## Project Structure
 ```
@@ -94,14 +84,6 @@ car-detection-api/
 ├── screenshots/
 └── README.md
 ```
-
-## Model Training
-
-Used transfer learning to adapt a pre-trained Faster R-CNN model:
-1. Loaded weights from COCO dataset pre-training
-2. Fine-tuned on street car images (~350 annotated images)
-3. Converted CSV bounding box annotations to COCO JSON format
-4. Ran 1000 training iterations using 80/20 train/validation split
 
 ## License
 
