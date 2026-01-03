@@ -1,24 +1,12 @@
 # Car Detection API
 
-A custom-trained object detection system that identifies vehicles in street scene images. Built with Faster R-CNN and deployed as a REST API on Google Cloud Run with a web interface for real-time inference.
+A custom-trained object detection system that identifies vehicles in street scene images. Built with Faster R-CNN and deployed as a REST API on Google Cloud Run with a web interface for real-time inference. Trained on ~350 labeled street scene images with bounding box annotations.
 
 ![Detection Demo](screenshots/detection_visual_example.jpg)
 
-## Features
-
-- **Custom-trained Faster R-CNN** model fine-tuned on street car dataset
-- **REST API** with FastAPI for programmatic access
-- **Web interface** with drag-and-drop image upload
-- **Real-time inference** with bounding box visualization
-- **Serverless deployment** on Google Cloud Run with auto-scaling
-
 ## Model Performance
 
-- **59.1% mAP** (mean Average Precision across IoU 0.5-0.95)
-- **94.8% AP50** (precision at 50% IoU threshold)
-- **69.3% AP75** (precision at 75% IoU threshold)
-
-Trained on ~350 labeled street scene images with bounding box annotations.
+The performance metric IoU stands for intersection over union and measures how much the predicted box overlaps with the true box from the sample csv file. The model achieved a 59.1% mAP (average precisision across IoU), 94.8% AP50 (precision at 50% IoU threshold), 69.3% AP75 (precision at 75% IoU).This means that 94.8% of the test image cars had atleast 50% label box overlap.
 
 ## API Endpoints
 
