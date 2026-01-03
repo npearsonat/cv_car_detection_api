@@ -4,7 +4,7 @@ A custom-trained object detection system that identifies vehicles in street scen
 
 ![Detection Demo](screenshots/detection_visual_example.jpg)
 
-## Model Performance
+## Model Performance and Overview
 
 The performance metric IoU stands for intersection over union and measures how much the predicted box overlaps with the true box from the sample csv file. The model achieved a 59.1% mAP (average precisision across IoU), 94.8% AP50 (precision at 50% IoU threshold), 69.3% AP75 (precision at 75% IoU).This means that 94.8% of the test image cars had atleast 50% label box overlap.
 
