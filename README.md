@@ -73,19 +73,3 @@ Postman provides an alternative method for testing the API programmatically. Use
 
 The model was built using PyTorch and Detectron2, implementing Faster R-CNN with a ResNet-50 FPN backbone. OpenCV handled image processing tasks, and training was conducted in Google Colab. 
 The backend uses FastAPI as the web framework with Uvicorn as the server, containerized with Docker and deployed on Google Cloud Run. The frontend is a simple HTML/CSS/JavaScript interface that uses the Fetch API to send HTTP requests to the deployed model.
-
-## Project Structure
-```
-car-detection-api/
-├── Dockerfile
-├── requirements.txt
-├── main.py
-├── index.html
-├── screenshots/
-└── README.md
-```
-
-## License
-
-MIT License - see LICENSE file for details
-
